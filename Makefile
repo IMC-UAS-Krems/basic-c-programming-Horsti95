@@ -12,14 +12,18 @@ SRC = assignment.c
 
 # Rule to build the target executable
 $(TARGET): $(SRC)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+	$(CC) $(CFLAGS) -c $(SRC) -o $(SRC:.c=.o)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRC:.c=.o)
 
-test: $(TARGET) test.c
-	$(CC) $(CFLAGS) -o test test.c
+# Rule to build and run tests
+test: $(TARGET) test_program
 	./$(TARGET) 5 10
-	./test
+	./test_program
+
+# Rule to compile the test program
+test_program: test.c
+	$(CC) $(CFLAGS) -o test_program test.c
 
 # Rule to clean up the build files
 clean:
-	rm -f $(TARGET) test
-
+	rm -f $(TARGET) test_program $(SRC:.c=.o)
